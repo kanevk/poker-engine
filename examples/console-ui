@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+Bundler.require(:default, :development)
+
+require_relative '../lib/poker_engine'
+
+Thread.abort_on_exception = true
+
+PLAYERS = [
+  { id: 0, name: 'John', balance: 1000 },
+  { id: 1, name: 'Kamen', balance: 400 },
+  { id: 2, name: 'Jenny', balance: 900 }
+].freeze
+
+events_queue = Queue.new
+move_queue = Queue.new
+
+server = Thread.new do
+  initial_state = PokerEngine.initial_state(PLAYERS, small_blind: 10, big_blind: 20)
+  game = PokerEngine::CachedGame.new(initial_state) do |event|
+    events_queue.push event
+  end
+
+  game.start
+
+  loop do
+    move = move_queue.pop
+    state = game.run(move)
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    puts 'New state:'
+    p state
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+  end
+end
+
+client = Thread.new do
+  loop do
+    event = events_queue.pop
+    puts
+    puts '======================================================================'
+    puts Time.now
+    puts '======================================================================'
+    puts event
+    puts '======================================================================'
+    puts
+
+    next if event.type != :move_request
+
+    puts "Player #{event.player_id}'s move':"
+    p 'action:'
+    action = gets.strip.to_sym
+    p 'bet:'
+    bet = gets.to_i
+    move_queue.push OpenStruct.new(type: action, bet: bet, player_id: event.player_id)
+  end
+end
+
+[server, client].each(&:join)
