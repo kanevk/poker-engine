@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.require_path = 'lib'
 
   # spec.add_runtime_dependency 'danger', '~> 3.0'
+  spec.add_runtime_dependency 'hamster'
 
   # General ruby development
   spec.add_development_dependency 'bundler', '~> 1.3'
@@ -29,6 +30,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'rspec', '~> 3.4'
   spec.add_development_dependency 'rubocop', '~> 0.48'
+  spec.add_development_dependency 'pry'
 
   # If you need an executable, add it here
   # spec.executables = ['newgem']
