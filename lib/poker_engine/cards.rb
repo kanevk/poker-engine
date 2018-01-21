@@ -6,10 +6,9 @@ module PokerEngine
       's' => Card::COLORS[:spade],
       'c' => Card::COLORS[:club],
       'h' => Card::COLORS[:heart],
-      'd' => Card::COLORS[:diamond]
+      'd' => Card::COLORS[:diamond],
     }.freeze
 
-    # TODO: Don't make N + 1 queries
     def self.parse(str_cards)
       cards = str_cards
               .split(',')
@@ -26,6 +25,10 @@ module PokerEngine
       @cards = cards
     end
 
+    def to_s
+      cards.map(&:to_s).join(', ')
+    end
+
     def each(&block)
       cards.each(&block)
     end
@@ -36,23 +39,23 @@ module PokerEngine
 
     # TODO: Make it work with block, too
     def sort
-      cards.sort_by(&:number)
+      cards.sort_by(&:value)
     end
 
-    def sorted_numbers
-      cards.map(&:number).sort
+    def sorted_values
+      cards.map(&:value).sort
     end
 
     def combination(x)
       cards.combination(x).map { |c| Cards.new(c) }
     end
 
-    # Make descending order primary by occurency and secondary by number value
-    def numbers_desc_by_occurency
-      numbers = cards.map(&:number)
+    # Make descending order primary by occurency and secondary by value
+    def values_desc_by_occurency
+      values = cards.map(&:value)
 
-      numbers.sort do |a, b|
-        coefficient_occurency = (numbers.count(a) <=> numbers.count(b))
+      values.sort do |a, b|
+        coefficient_occurency = (values.count(a) <=> values.count(b))
 
         coefficient_occurency.zero? ? -(a <=> b) : -coefficient_occurency
       end

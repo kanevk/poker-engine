@@ -1,7 +1,6 @@
 require_relative 'hand_levels'
 
-module PokerGame
-  # It's abstraction for comparing poker hands.
+module PokerEngine
   class HandIndex
     # The index is equivalent to the level strength
     RANK_TABLE = [HandLevels::HighCard, HandLevels::OnePair,

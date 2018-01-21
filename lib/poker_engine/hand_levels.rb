@@ -1,6 +1,6 @@
 require_relative 'cards'
 
-module PokerGame
+module PokerEngine
   module HandLevels
     # Abstract class for Hand level
     class BaseLevel
@@ -19,8 +19,8 @@ module PokerGame
       end
 
       def detail_compare(other)
-        cards.numbers_desc_by_occurency <=>
-          other.cards.numbers_desc_by_occurency
+        cards.values_desc_by_occurency <=>
+          other.cards.values_desc_by_occurency
       end
     end
 
@@ -34,7 +34,7 @@ module PokerGame
 
     OnePair = Class.new(BaseLevel) do
       def self.owns?(cards)
-        cards.sorted_numbers
+        cards.sorted_values
              .group_by(&:itself)
              .any? { |_, group| group.size == 2 }
       end
@@ -42,7 +42,7 @@ module PokerGame
 
     TwoPairs = Class.new(BaseLevel) do
       def self.owns?(cards)
-        cards.sorted_numbers
+        cards.sorted_values
              .group_by(&:itself)
              .select { |_, group| group.size == 2 }
              .count
@@ -52,7 +52,7 @@ module PokerGame
 
     ThreeOfAKind = Class.new(BaseLevel) do
       def self.owns?(cards)
-        cards.sorted_numbers
+        cards.sorted_values
              .group_by(&:itself)
              .one? { |_, group| group.size == 3 }
       end
@@ -60,7 +60,7 @@ module PokerGame
 
     Straight = Class.new(BaseLevel) do
       def self.owns?(cards)
-        cards.sorted_numbers
+        cards.sorted_values
              .each_cons(2)
              .map { |a, b| a - b }
              .uniq
@@ -68,7 +68,7 @@ module PokerGame
       end
 
       def detail_compare(other)
-        cards.sorted_numbers.first <=> other.cards.sorted_numbers.first
+        cards.sorted_values.first <=> other.cards.sorted_values.first
       end
     end
 
@@ -80,7 +80,7 @@ module PokerGame
 
     FullHouse = Class.new(BaseLevel) do
       def self.owns?(cards)
-        cards.map(&:number).uniq.many? &&
+        cards.map(&:value).uniq.count > 1 &&
           OnePair.owns?(cards) &&
           ThreeOfAKind.owns?(cards)
       end
@@ -88,7 +88,7 @@ module PokerGame
 
     FourOfAKind = Class.new(BaseLevel) do
       def self.owns?(cards)
-        cards.sorted_numbers
+        cards.sorted_values
              .group_by(&:itself)
              .one? { |_, group| group.size == 4 }
       end
@@ -100,7 +100,7 @@ module PokerGame
       end
 
       def detail_compare(other)
-        cards.sorted_numbers.first <=> other.cards.sorted_numbers.first
+        cards.sorted_values.first <=> other.cards.sorted_values.first
       end
     end
   end
