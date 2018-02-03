@@ -12,7 +12,7 @@ module PokerEngine
 
       def <=>(other)
         unless other.instance_of?(self.class)
-          fail "Can't detail detail hands of different level"
+          fail "Can't detail compare hands of different level"
         end
 
         detail_compare(other)

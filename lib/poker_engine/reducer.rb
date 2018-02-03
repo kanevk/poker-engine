@@ -91,7 +91,7 @@ module PokerEngine
           .put(:aggressor_id, nil)
       end
 
-      def game_end(state, top_hands:, winner_ids:, **_action)
+      def game_end(state, top_hands: [], winner_ids:, **_action)
         state
           .put(:top_hands, top_hands)
           .put(:winner_ids, winner_ids)
