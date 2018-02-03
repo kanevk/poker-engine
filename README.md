@@ -1,24 +1,18 @@
 # poker-engine
 Poker library written in Ruby :heart:
 
-![The price](the_price.jpg)
-
 ## Try it
 
-Currently there is simple 74% working console interface `./examples/console-ui`
+There is simple console interface, run `./examples/simple-gameplay.rb` and play!  
 
-## TODOs
+Valid moves:
+- check
+- fold
+- call
+- raise [bet amount], example: __raise 100__
 
-- [ ] Adding validators
-
-  Currently, the user moves are not validated and that can result in breaking the game logic.
-- [ ] Rethink the concept of aggressor
-- [ ] Plug-in the hand evaluation logic in to the game cycle
-
-## Test~~s~~
+## Documentation
+ In progress
+## Tests
 
 Run `rspec`
-
-## Resources
-
-- https://www.pokernews.com/pokerterms
