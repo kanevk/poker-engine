@@ -12,9 +12,7 @@ module PokerEngine
 
     it 'plays poker game with many stages' do
       events_queue = []
-      handler = lambda do |(_old_state, action), _state|
-        events_queue << action
-      end
+      handler = ->(action, _state) { events_queue << action }
 
       state = Game.start players, small_blind: 10, big_blind: 20, deck_seed: 2, &handler
 

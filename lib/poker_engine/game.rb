@@ -14,8 +14,8 @@ module PokerEngine
       run(state, &handler)
     end
 
-    def next(state, player_action, &handler)
-      state = Reducer.call state, player_action
+    def next(outer_state, player_action, &handler)
+      state = Reducer.call Hamster.from(outer_state), player_action
 
       run(state, &handler)
     end
@@ -23,13 +23,13 @@ module PokerEngine
     def run(state, &handler)
       subscribed_reducer = lambda do |old_state, action|
         new_state = Reducer.call old_state, action
-        handler&.call [old_state, action], new_state
+        handler&.call action, Hamster.to_ruby(new_state)
 
         new_state
       end
 
       loop do
-        break state if state[:pending_request] || state[:game_ended]
+        break Hamster.to_ruby(state) if state[:pending_request] || state[:game_ended]
 
         actions = NextActions.call(state)
         state = actions.reduce(state, &subscribed_reducer)

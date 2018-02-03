@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    poker-engine (1.0.0)
+    poker-engine (1.1.0)
       hamster (~> 3.0)
 
 GEM
