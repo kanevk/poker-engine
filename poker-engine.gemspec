@@ -9,17 +9,16 @@ Gem::Specification.new do |spec|
   spec.platform = Gem::Platform::RUBY
   spec.author = 'Kamen Kanev'
   spec.email = 'kamen.e.kanev@gmail.com'
-  spec.homepage = 'https://github.com/kekanev/poker-engine'
+  spec.homepage = 'https://github.com/kanevk/poker-engine'
   spec.summary = 'Poker library introducing the game logic into a simple interface.'
   spec.description = <<-DESC
     Poker library introducing the game logic with a simple interface. Currently offering only 6-max Holdem games.
   DESC
-  spec.metadata = { 'github' => 'https://github.com/kekanev/poker-engine' }
+  spec.metadata = { 'github' => 'https://github.com/kanevk/poker-engine' }
   spec.license = 'MIT'
 
   spec.files = Dir['{lib}/**/*.rb', 'bin/*', 'LICENSE', '*.md']
   spec.bindir = 'bin'
-  spec.executables = %w(console)
 
   spec.add_runtime_dependency 'hamster', '~> 3.0'
 
