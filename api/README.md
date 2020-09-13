@@ -9,6 +9,12 @@ Things you may want to cover:
 
 * System dependencies
 
+Install the pg gem with correct config path:
+
+```shell
+  gem install pg -v '1.2.3' --source 'https://rubygems.org/' -with-pg-config=../docker/data/postgres/postgresql.conf
+```
+
 * Configuration
 
 * Database creation
