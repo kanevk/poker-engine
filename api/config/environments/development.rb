@@ -8,6 +8,7 @@ Rails.application.configure do
 
   # Do not eager load code on boot.
   config.eager_load = false
+  config.log_level = :debug
 
   # Show full error reports.
   config.consider_all_requests_local = true
@@ -41,6 +42,11 @@ Rails.application.configure do
 
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
+
+  # config.action_cable.url = "ws://localhost:3001/cable"
+  config.action_cable.mount_path = '/cable'
+  # TODO: Production
+  config.action_cable.allowed_request_origins = [ /http:\/\/localhost:*/ ]
 
 
   # Raises error for missing translations.

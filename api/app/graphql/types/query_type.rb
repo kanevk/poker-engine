@@ -1,13 +1,22 @@
 module Types
   class QueryType < Types::BaseObject
-    # Add root-level fields here.
-    # They will be entry points for queries on your schema.
+    field :is_authenticated, Boolean, null: false
+    def is_authenticated
+      !!context[:current_user]
+    end
 
-    # TODO: remove me
-    field :test_field, String, null: false,
-      description: "An example field added by the generator"
-    def test_field
-      "Hello World!"
+    field :get_room, Types::RoomType, null: false do
+      argument :id, ID, required: true, default_value: false
+    end
+
+    def get_room(id:)
+      Room.find(id)
+    end
+
+    field :rooms, [Types::RoomType], null: false
+
+    def rooms
+      Room.all
     end
   end
 end

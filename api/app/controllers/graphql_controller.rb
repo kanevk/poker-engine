@@ -4,15 +4,15 @@ class GraphqlController < ApplicationController
   # but you'll have to authenticate your user separately
   # protect_from_forgery with: :null_session
 
+  include ActionController::HttpAuthentication::Token::ControllerMethods
+
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
-    }
+    context = { current_user: current_user }
     result = ApiSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
+
     render json: result
   rescue => e
     raise e unless Rails.env.development?
@@ -20,6 +20,16 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  def current_user
+    user = authenticate_with_http_token do |token, _options|
+      user_id = AuthToken.decode(token)[:user_id]
+
+      raise GraphQL::ExecutionError.new("Wrong authentication token!") unless user_id
+
+      User.find user_id
+    end
+  end
 
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)
