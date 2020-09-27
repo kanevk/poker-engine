@@ -24,7 +24,6 @@ module Types
 
   class GameType < Types::BaseObject
     field :id, ID, null: false
-
     field :version, ID, null: false
 
     field :current_player, PlayerType, null: true

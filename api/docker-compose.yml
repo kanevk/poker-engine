@@ -1,6 +1,15 @@
-version: "3.1"
+version: "3.2"
 
 services:
+  poker_redis:
+    image: redis:6.0.8
+    # command: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./tmp/data/redis:/var/lib/redis
+      - ./tmp/data/redis.conf:/usr/local/etc/redis/redis.conf
+
   poker_postgres:
     image: postgres:12.4
     environment:

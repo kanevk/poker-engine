@@ -19,30 +19,20 @@ module Types
   end
 
   class MakeMove < Mutations::BaseMutation
-    argument :room_id, ID, required: true
+    argument :game_version, ID, required: true
     # TOOD: Turn to Enum
     argument :move, String, required: true
-    argument :bet, String, required: false
-    argument :x_player_id, String, required: false if Rails.env.development?
+    argument :bet, Integer, required: false
+    argument :x_player_id, ID, required: false if Rails.env.development?
 
     field :success, Boolean, null: false
 
-    def resolve(room_id:, move:, bet: nil, x_player_id: nil)
-      room = Room.find(room_id)
-      state = room.current_game.state
+    def resolve(game_version:, move:, bet: nil, x_player_id: nil)
+      # TODO: validate current player on move
+      player_id = (x_player_id || @context[:current_user].id)&.to_i
+      game = Gameplay.make_move(game_version, player_id: player_id, move: move.to_sym, bet: bet&.to_i)
 
-      player_id = (x_player_id || @context[:current_user].id).to_i
-
-      if state[:current_player_id] != player_id
-        raise "Wrong player in turn #{player_id}. In turn is #{state[:current_player_id]}"
-      end
-
-      action = { player_id: player_id, type: move.to_sym, bet: bet.to_i }
-
-      new_state = PokerEngine::Game.next(state, action) { |*args| Rails.logger.info("^^^^^^ #{args}") }
-      room.current_game.update!(state: new_state)
-
-      ApiSchema.subscriptions.trigger(:get_room, { room_id: room_id }, room.reload)
+      ApiSchema.subscriptions.trigger(:get_room, { room_id: game.room_id }, nil)
       { success: true }
     end
   end
