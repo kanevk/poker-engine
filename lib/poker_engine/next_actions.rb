@@ -19,7 +19,7 @@ module PokerEngine
       when :check, :call, :raise, :fold
         player_id = state_operations.next_player_id
 
-        if player_id == state[:current_player_id]
+        if player_id == state[:current_player_id] || state_operations.one_player_left?
           [{ type: :game_end, winner_ids: [player_id] }]
         elsif player_id == state[:aggressor_id] && !state_operations.next_stage?
           players = Hamster.to_ruby state[:players].values

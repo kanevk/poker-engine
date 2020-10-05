@@ -26,6 +26,8 @@ module PokerEngine
     end
 
     def next_player_id
+      raise 'Invalid state' if active_players.count.zero?
+
       ordered_player_ids.cycle.each_with_index.find do |id, order_index|
         order_index > ordered_player_ids.index(state[:current_player_id]) &&
           players[id][:active]
