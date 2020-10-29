@@ -4,6 +4,8 @@ require 'bundler/setup'
 
 Bundler.require :default, :development
 
+RENDER_TIMEOUT = 1 # seconds
+
 players = [
   { id: 0, balance: 1000 },
   { id: 1, balance: 900 },
@@ -12,7 +14,7 @@ players = [
 
 def event_handler(action, state)
   draw state, action
-  sleep 1
+  sleep RENDER_TIMEOUT
 end
 
 def draw_border(delimiter, title = '')
